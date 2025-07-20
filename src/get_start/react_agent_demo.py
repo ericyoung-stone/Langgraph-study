@@ -3,9 +3,9 @@ React Agent Demo
 使用 LangGraph 的 create_react_agent 创建一个简单的天气查询代理
 """
 
-import os
-
 from langgraph.prebuilt import create_react_agent
+
+from src.common.local_llm import get_lm_studio_llm
 
 
 def get_weather(city: str) -> str:
@@ -29,15 +29,14 @@ def create_weather_agent():
         agent: 配置好的React Agent
     """
     # 检查API密钥
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise ValueError(
-            "请设置 ANTHROPIC_API_KEY 环境变量。\n"
-            "您可以在 https://console.anthropic.com/ 获取API密钥"
-        )
-    
+    # api_key = os.getenv("ANTHROPIC_API_KEY")
+    # if not api_key:
+    #     raise ValueError(
+    #         "请设置 ANTHROPIC_API_KEY 环境变量。\n"
+    #         "您可以在 https://console.anthropic.com/ 获取API密钥"
+    #     )
     agent = create_react_agent(
-        model="anthropic:claude-3-7-sonnet-latest",
+        model=get_lm_studio_llm(),
         tools=[get_weather],
         prompt="You are a helpful assistant"
     )
@@ -64,10 +63,12 @@ def run_agent_demo():
         )
         
         print("📊 代理响应:")
-        print(result)
-        
+        # print(result)
+        messages = result["messages"]
+        if len(messages) > 0:
+            for message in messages:
+                print(message)
         return result
-        
     except ValueError as e:
         print(f"❌ 配置错误: {e}")
         print("\n💡 解决方案:")
