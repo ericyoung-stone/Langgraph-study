@@ -39,7 +39,7 @@ export ANTHROPIC_API_KEY="your-api-key-here"
 #### 方法一：直接运行模块文件
 
 ```bash
-python src/get_start/react_agent_demo.py
+python src/get_start/quick_start_react_agent_demo.py
 ```
 
 #### 方法二：使用测试脚本
@@ -51,7 +51,7 @@ python test_react_agent.py
 #### 方法三：在 Python 中导入使用
 
 ```python
-from src.get_start.react_agent_demo import run_agent_demo
+from src.get_start.quick_start_react_agent_demo import run_agent_demo
 
 # 运行演示
 result = run_agent_demo()

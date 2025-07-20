@@ -10,7 +10,7 @@ from unittest.mock import patch, MagicMock
 # 添加项目根目录到 Python 路径
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from src.get_start.langgraph_agents_tutorial import (
+from src.get_start.start_with_a_prebuilt_agents_tutorial import (
     get_weather,
     WeatherResponse,
     create_basic_agent,
@@ -63,8 +63,8 @@ class TestWeatherResponse:
 class TestAgentCreation:
     """测试代理创建函数"""
     
-    @patch('src.get_start.langgraph_agents_tutorial.get_lm_studio_llm')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.get_lm_studio_llm')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
     def test_create_basic_agent(self, mock_create_agent, mock_get_llm):
         """测试创建基础代理"""
         mock_llm = MagicMock()
@@ -82,8 +82,8 @@ class TestAgentCreation:
             prompt="You are a helpful assistant"
         )
     
-    @patch('src.get_start.langgraph_agents_tutorial.init_chat_model')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.init_chat_model')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
     def test_create_configured_agent(self, mock_create_agent, mock_init_model):
         """测试创建配置代理"""
         mock_model = MagicMock()
@@ -100,8 +100,8 @@ class TestAgentCreation:
             temperature=0
         )
     
-    @patch('src.get_start.langgraph_agents_tutorial.get_lm_studio_llm')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.get_lm_studio_llm')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
     def test_create_static_prompt_agent(self, mock_create_agent, mock_get_llm):
         """测试创建静态提示代理"""
         mock_llm = MagicMock()
@@ -119,8 +119,8 @@ class TestAgentCreation:
             prompt="Never answer questions about the weather."
         )
     
-    @patch('src.get_start.langgraph_agents_tutorial.get_lm_studio_llm')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.get_lm_studio_llm')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
     def test_create_dynamic_prompt_agent(self, mock_create_agent, mock_get_llm):
         """测试创建动态提示代理"""
         mock_llm = MagicMock()
@@ -138,9 +138,9 @@ class TestAgentCreation:
         assert call_args[1]['tools'] == [get_weather]
         assert callable(call_args[1]['prompt'])
     
-    @patch('src.get_start.langgraph_agents_tutorial.get_lm_studio_llm')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
-    @patch('src.get_start.langgraph_agents_tutorial.InMemorySaver')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.get_lm_studio_llm')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.InMemorySaver')
     def test_create_memory_agent(self, mock_saver, mock_create_agent, mock_get_llm):
         """测试创建内存代理"""
         mock_llm = MagicMock()
@@ -161,8 +161,8 @@ class TestAgentCreation:
             checkpointer=mock_checkpointer
         )
     
-    @patch('src.get_start.langgraph_agents_tutorial.get_lm_studio_llm')
-    @patch('src.get_start.langgraph_agents_tutorial.create_react_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.get_lm_studio_llm')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_react_agent')
     def test_create_structured_output_agent(self, mock_create_agent, mock_get_llm):
         """测试创建结构化输出代理"""
         mock_llm = MagicMock()
@@ -184,7 +184,7 @@ class TestAgentCreation:
 class TestDemoFunctions:
     """测试演示函数"""
     
-    @patch('src.get_start.langgraph_agents_tutorial.create_basic_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_basic_agent')
     @patch('builtins.print')
     def test_run_basic_agent_demo_success(self, mock_print, mock_create_agent):
         """测试基础代理演示成功"""
@@ -198,7 +198,7 @@ class TestDemoFunctions:
         assert result == mock_result
         mock_agent.invoke.assert_called_once()
     
-    @patch('src.get_start.langgraph_agents_tutorial.create_basic_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_basic_agent')
     @patch('builtins.print')
     def test_run_basic_agent_demo_error(self, mock_print, mock_create_agent):
         """测试基础代理演示错误处理"""
@@ -208,7 +208,7 @@ class TestDemoFunctions:
         
         assert result is None
     
-    @patch('src.get_start.langgraph_agents_tutorial.create_memory_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_memory_agent')
     @patch('builtins.print')
     def test_run_memory_agent_demo(self, mock_print, mock_create_agent):
         """测试内存代理演示"""
@@ -223,7 +223,7 @@ class TestDemoFunctions:
         assert result == {"sf": mock_sf_result, "ny": mock_ny_result}
         assert mock_agent.invoke.call_count == 2
     
-    @patch('src.get_start.langgraph_agents_tutorial.create_structured_output_agent')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.create_structured_output_agent')
     @patch('builtins.print')
     def test_run_structured_output_demo(self, mock_print, mock_create_agent):
         """测试结构化输出演示"""
@@ -243,12 +243,12 @@ class TestDemoFunctions:
 class TestCompleteTutorial:
     """测试完整教程"""
     
-    @patch('src.get_start.langgraph_agents_tutorial.run_basic_agent_demo')
-    @patch('src.get_start.langgraph_agents_tutorial.run_configured_agent_demo')
-    @patch('src.get_start.langgraph_agents_tutorial.run_static_prompt_demo')
-    @patch('src.get_start.langgraph_agents_tutorial.run_dynamic_prompt_demo')
-    @patch('src.get_start.langgraph_agents_tutorial.run_memory_agent_demo')
-    @patch('src.get_start.langgraph_agents_tutorial.run_structured_output_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_basic_agent_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_configured_agent_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_static_prompt_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_dynamic_prompt_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_memory_agent_demo')
+    @patch('src.get_start.start_with_a_prebuilt_agents_tutorial.run_structured_output_demo')
     @patch('builtins.print')
     def test_run_complete_tutorial(self, mock_print, mock_structured, mock_memory, 
                                   mock_dynamic, mock_static, mock_configured, mock_basic):

@@ -31,10 +31,10 @@ pytest
 pytest tests/get_start/
 
 # 运行特定测试文件
-pytest tests/get_start/test_react_agent_demo.py
+pytest tests/get_start/test_quick_start_react_agent_demo.py
 
 # 运行特定测试方法
-pytest tests/get_start/test_react_agent_demo.py::TestGetWeather::test_get_weather_basic
+pytest tests/get_start/test_quick_start_react_agent_demo.py::TestGetWeather::test_get_weather_basic
 ```
 
 ### 方法二：使用项目提供的测试脚本
@@ -54,7 +54,7 @@ python run_tests.py --specific
 python -m pytest
 
 # 运行特定测试
-python -m pytest tests/get_start/test_react_agent_demo.py -v
+python -m pytest tests/get_start/test_quick_start_react_agent_demo.py -v
 ```
 
 ## 测试类型

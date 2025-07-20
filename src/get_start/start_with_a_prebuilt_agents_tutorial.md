@@ -1,4 +1,4 @@
-# LangGraph Agents 教程
+# start_with_a_prebuilt_agents_tutorial 教程
 
 这个模块基于 [LangGraph 官方文档](https://langchain-ai.github.io/langgraph/agents/agents/) 创建，展示了如何使用 LangGraph 的预构建组件来快速构建智能代理系统。
 
@@ -143,7 +143,7 @@ def create_structured_output_agent():
 ### 1. 运行完整教程
 
 ```python
-from src.get_start.langgraph_agents_tutorial import run_complete_tutorial
+from src.get_start.start_with_a_prebuilt_agents_tutorial import run_complete_tutorial
 
 # 运行所有步骤的演示
 results = run_complete_tutorial()
@@ -152,7 +152,7 @@ results = run_complete_tutorial()
 ### 2. 运行单个步骤
 
 ```python
-from src.get_start.langgraph_agents_tutorial import (
+from src.get_start.start_with_a_prebuilt_agents_tutorial import (
     run_basic_agent_demo,
     run_configured_agent_demo,
     run_static_prompt_demo,
@@ -168,7 +168,7 @@ result = run_basic_agent_demo()
 ### 3. 创建自定义代理
 
 ```python
-from src.get_start.langgraph_agents_tutorial import create_basic_agent
+from src.get_start.start_with_a_prebuilt_agents_tutorial import create_basic_agent
 
 # 创建代理
 agent = create_basic_agent()
@@ -240,7 +240,7 @@ Pydantic 模型，用于定义天气响应的结构化格式。
 python test_tutorial_demo.py
 
 # 运行完整测试套件
-python -m pytest tests/get_start/test_langgraph_agents_tutorial.py -v
+python -m pytest tests/get_start/test_start_with_a_prebuilt_agents_tutorial.py -v
 ```
 
 ## 依赖项

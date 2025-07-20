@@ -50,7 +50,7 @@ def run_specific_test():
     """运行特定的测试文件"""
     print("🧪 运行 React Agent 测试...")
     
-    test_file = "tests/get_start/test_react_agent_demo.py"
+    test_file = "tests/get_start/test_quick_start_react_agent_demo.py"
     
     if not os.path.exists(test_file):
         print(f"❌ 测试文件不存在: {test_file}")

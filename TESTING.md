@@ -48,7 +48,7 @@ python run_tests.py --specific
 pytest
 
 # 运行特定测试文件
-pytest tests/get_start/test_react_agent_demo.py -v
+pytest tests/get_start/test_quick_start_react_agent_demo.py -v
 ```
 
 ## 测试类型
