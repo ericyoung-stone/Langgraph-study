@@ -2,6 +2,7 @@
 Get Started 模块
 包含 LangGraph 入门示例
 """
+import os
 
 from .quick_start_react_agent_demo import (
     get_weather,
@@ -30,6 +31,8 @@ from .start_with_a_prebuilt_agents_tutorial import (
     run_structured_output_demo,
     run_complete_tutorial
 )
+
+get_start_dir = os.path.dirname(__file__)
 
 __all__ = [
     # React Agent Demo
