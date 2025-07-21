@@ -20,7 +20,7 @@ from langgraph.types import Command, interrupt
 from typing_extensions import TypedDict
 
 from src.common.local_llm import get_lm_studio_llm
-from src.common.utils import set_env_if_undefined
+from src.common.utils import set_env_if_undefined, display_graph_nodes, print_agent_invoke_result
 from src.get_start import get_start_dir
 
 
@@ -247,111 +247,124 @@ def get_state_history(graph, config: Dict) -> Any:
     """
     return graph.get_state_history(config)
 
-# 8. 演示主入口
-def run_all_demos():
-    """
-    依次演示所有步骤
-    """
-    set_env_if_undefined("TAVILY_API_KEY", "your-api-key")
-    llm = get_lm_studio_llm()
-    img_dir = os.path.join(get_start_dir, "graph_img")
+# 8. 1-6步骤的demo
+def demo_basic_chatbot(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤1：基础聊天机器人 =====")
-    # basic_graph = build_basic_chatbot(llm)
-    # display_graph_nodes(basic_graph, img_path=os.path.join(img_dir, "basic_graph.png"))
-    # result1 = basic_graph.invoke({"messages": [{"role": "user", "content": "你好！"}]})
-    # print_agent_invoke_result(result1)
+    basic_graph = build_basic_chatbot(llm)
+    if save_img:
+        display_graph_nodes(basic_graph, img_path=os.path.join(img_dir, "basic_graph.png"))
+    result1 = basic_graph.invoke({"messages": [{"role": "user", "content": "你好！"}]})
+    print_agent_invoke_result(result1)
 
+
+def demo_tool_chatbot(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤2：集成工具 =====")
-    # tool_graph = build_tool_chatbot(llm)
-    # display_graph_nodes(tool_graph, img_path=os.path.join(img_dir, "tool_graph.png"))
-    # result2 = tool_graph.invoke({"messages": [{"role": "user", "content": "LangGraph 是什么？"}]})
-    # print_agent_invoke_result(result2)
+    tool_graph = build_tool_chatbot(llm)
+    if save_img:
+        display_graph_nodes(tool_graph, img_path=os.path.join(img_dir, "tool_graph.png"))
+    result2 = tool_graph.invoke({"messages": [{"role": "user", "content": "LangGraph 是什么？"}]})
+    print_agent_invoke_result(result2)
 
+
+def demo_memory_chatbot(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤3.1：添加记忆能力 =====")
-    # memory_graph = build_memory_chatbot(llm)
-    # display_graph_nodes(memory_graph, img_path=os.path.join(img_dir, "memory_graph.png"))
-    # config = {"configurable": {"thread_id": "1"}}
-    # result3a = memory_graph.invoke({"messages": [{"role": "user", "content": "我叫小明。"}]}, config)
-    # result3b = memory_graph.invoke({"messages": [{"role": "user", "content": "你还记得我是谁吗？"}]}, config)
-    # print_agent_invoke_result(result3a)
-    # print_agent_invoke_result(result3b)
+    memory_graph = build_memory_chatbot(llm)
+    if save_img:
+        display_graph_nodes(memory_graph, img_path=os.path.join(img_dir, "memory_graph.png"))
+    config = {"configurable": {"thread_id": "1"}}
+    result3a = memory_graph.invoke({"messages": [{"role": "user", "content": "我叫小明。"}]}, config)
+    result3b = memory_graph.invoke({"messages": [{"role": "user", "content": "你还记得我是谁吗？"}]}, config)
+    print_agent_invoke_result(result3a)
+    print_agent_invoke_result(result3b)
 
+
+def demo_memory_chatbot_stream(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤3.2：添加记忆能力(stream) =====")
-    # config = {"configurable": {"thread_id": "2"}}
-    # # The config is the **second positional argument** to stream() or invoke()!
-    # events1 = memory_graph.stream({"messages": [{"role": "user", "content": "Hi there! My name is Will."}]}, config, stream_mode="values")
-    # for event in events1:
-    #     event["messages"][-1].pretty_print()
-    # events2 = memory_graph.stream({"messages": [{"role": "user", "content": "Remember my name?"}]}, config, stream_mode="values")
-    # for event in events2:
-    #     event["messages"][-1].pretty_print()
-    # snapshot = memory_graph.get_state(config)
-    # print("snapshot:", snapshot) # 空()
-    # print("snapshot.next:", snapshot.next)
+    memory_graph = build_memory_chatbot(llm)
+    if save_img:
+        display_graph_nodes(memory_graph, img_path=os.path.join(img_dir, "memory_graph.png"))
+    config = {"configurable": {"thread_id": "2"}}
+    # 第一次提问
+    events1 = memory_graph.stream({"messages": [{"role": "user", "content": "Hi there! My name is Will."}]}, config, stream_mode="values")
+    for event in events1:
+        event["messages"][-1].pretty_print()
+    # 第二次提问
+    events2 = memory_graph.stream({"messages": [{"role": "user", "content": "Remember my name?"}]}, config, stream_mode="values")
+    for event in events2:
+        event["messages"][-1].pretty_print()
+    # 获取图状态的快照
+    snapshot = memory_graph.get_state(config)
+    print("snapshot:", snapshot)
+    print("snapshot.next:", getattr(snapshot, 'next', None))
 
+
+def demo_human_in_loop_chatbot(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤4：引入人类参与 =====")
-    # 需人工交互环境下演示
-    # human_graph = build_human_in_loop_chatbot(llm)
-    # display_graph_nodes(human_graph, img_path=os.path.join(img_dir, "human_graph.png"))
-    # user_input = "I need some expert guidance for building an AI agent. Could you request assistance for me?"
-    # config = {"configurable": {"thread_id": "1"}}
-    # events1 = human_graph.stream({"messages": [{"role": "user", "content": user_input}]}, config, stream_mode="values")
-    # for event in events1:
-    #     event["messages"][-1].pretty_print()
-    # snapshot = human_graph.get_state(config)
-    # # print("snapshot:", snapshot)
-    # print("snapshot.next:", snapshot.next) # (tools,)
-    # # 人工介入+恢复
-    # human_response = (
-    #     "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
-    #     " It's much more reliable and extensible than simple autonomous agents."
-    # )
-    # human_command = Command(resume={"data": human_response})
-    # events2 = human_graph.stream(human_command, config, stream_mode="values")
-    # for event in events2:
-    #     if "messages" in event:
-    #         event["messages"][-1].pretty_print()
+    human_graph = build_human_in_loop_chatbot(llm)
+    if save_img:
+        display_graph_nodes(human_graph, img_path=os.path.join(img_dir, "human_graph.png"))
+    user_input = "I need some expert guidance for building an AI agent. Could you request assistance for me?"
+    config = {"configurable": {"thread_id": "1"}}
 
+    events1 = human_graph.stream({"messages": [{"role": "user", "content": user_input}]}, config, stream_mode="values")
+    for event in events1:
+        event["messages"][-1].pretty_print()
+
+    snapshot = human_graph.get_state(config)
+    print("snapshot.next:", getattr(snapshot, 'next', None))
+    # 人工介入
+    human_response = (
+        "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
+        " It's much more reliable and extensible than simple autonomous agents."
+    )
+    human_command = Command(resume={"data": human_response})
+    events2 = human_graph.stream(human_command, config, stream_mode="values")
+    for event in events2:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
+
+
+def demo_custom_state_chatbot(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤5：自定义状态 =====")
-    # custom_graph = build_custom_state_chatbot(llm)
-    # display_graph_nodes(custom_graph, img_path=os.path.join(img_dir, "custom_graph.png"))
-    # user_input = (
-    #     "Can you look up when LangGraph was released? "
-    #     "When you have the answer, use the human_assistance tool for review."
-    # )
-    # config = {"configurable": {"thread_id": "1"}}
-    # # 触发human_assistance 工具中的中断
-    # events = custom_graph.stream({"messages": [{"role": "user", "content": user_input}]}, config, stream_mode="values")
-    # for event in events:
-    #     if "messages" in event:
-    #         event["messages"][-1].pretty_print()
-    #
-    # # 添加人工协助
-    # human_command = Command(
-    #     resume={
-    #         "name": "LangGraph",
-    #         "birthday": "Jan 17, 2024",
-    #     },
-    # )
-    # events = custom_graph.stream(human_command, config, stream_mode="values")
-    # for event in events:
-    #     if "messages" in event:
-    #         event["messages"][-1].pretty_print()
-    # snapshot = custom_graph.get_state(config)
-    # print("snapshot:", snapshot)
-    # m = {k: v for k, v in snapshot.values.items() if k in ("name", "birthday")}
-    # print("m:", m)
-    # # 手动更新状态(可选), 但是通常建议使用中断功能，因为它允许数据在人在环交互中传输，而与状态更新无关。
-    # custom_graph.update_state(config, {"name": "LangGraph (library)"})
-    # snapshot2 = custom_graph.get_state(config)
-    # print("snapshot2:", snapshot2)
-    # m2 = {k: v for k, v in snapshot.values.items() if k in ("name", "birthday")}
-    # print("m2:", m2)
+    custom_graph = build_custom_state_chatbot(llm)
+    if save_img:
+        display_graph_nodes(custom_graph, img_path=os.path.join(img_dir, "custom_graph.png"))
+    user_input = (
+        "Can you look up when LangGraph was released? "
+        "When you have the answer, use the human_assistance tool for review."
+    )
+    config = {"configurable": {"thread_id": "1"}}
+    events = custom_graph.stream({"messages": [{"role": "user", "content": user_input}]}, config, stream_mode="values")
+    for event in events:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
+    human_command = Command(
+        resume={
+            "name": "LangGraph",
+            "birthday": "Jan 17, 2024",
+        },
+    )
+    events = custom_graph.stream(human_command, config, stream_mode="values")
+    for event in events:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
+    snapshot = custom_graph.get_state(config)
+    print("snapshot:", snapshot)
+    m = {k: v for k, v in snapshot.values.items() if k in ("name", "birthday")}
+    print("m:", m)
+    custom_graph.update_state(config, {"name": "LangGraph (library)"})
+    snapshot2 = custom_graph.get_state(config)
+    print("snapshot2:", snapshot2)
+    m2 = {k: v for k, v in snapshot2.values.items() if k in ("name", "birthday")}
+    print("m2:", m2)
 
+
+def demo_time_travel(llm, img_dir, save_img: bool = False):
     print("\n===== 步骤6：时光回溯 =====")
     # 1)构建图
     memory_graph = build_memory_chatbot(llm)
-    # 2.1)添加对话
+    if save_img:
+        display_graph_nodes(memory_graph, img_path=os.path.join(img_dir, "memory_graph.png"))
     config = {"configurable": {"thread_id": "1"}}
     events = memory_graph.stream(
         {
@@ -399,15 +412,29 @@ def run_all_demos():
         if len(state.values["messages"]) == 6:
             # We are somewhat arbitrarily selecting a specific state based on the number of chat messages in the state.
             to_replay = state
-    # 从检查点恢复
-    print(to_replay.next)
-    print(to_replay.config)
-
-    # 4)从某个时刻(to_replay)加载状态
-    # 检查点的 to_replay.config 包含一个 checkpoint_id 时间戳。提供这个 checkpoint_id 值告诉 LangGraph 的检查指针加载从那个时刻开始的状态。
+    print(getattr(to_replay, 'next', None))
+    print(getattr(to_replay, 'config', None))
     for event in memory_graph.stream(None, to_replay.config, stream_mode="values"):
         if "messages" in event:
             event["messages"][-1].pretty_print()
+
+
+def run_all_demos():
+    """
+    依次演示所有步骤
+    """
+    # ready
+    llm = get_lm_studio_llm()
+    img_dir = os.path.join(get_start_dir, "graph_img")
+    # demo
+    demo_basic_chatbot(llm, img_dir)
+    demo_tool_chatbot(llm, img_dir)
+    demo_memory_chatbot(llm, img_dir)
+    demo_memory_chatbot_stream(llm, img_dir)
+    demo_human_in_loop_chatbot(llm, img_dir)  # 需人工交互环境
+    demo_custom_state_chatbot(llm, img_dir)   # 自定义状态 + 需人工交互环境
+    demo_time_travel(llm, img_dir) # 历史追溯
+    print("demo END")
 
 if __name__ == "__main__":
     # 需根据实际环境初始化 LLM
@@ -415,4 +442,5 @@ if __name__ == "__main__":
     # import os
     # os.environ["OPENAI_API_KEY"] = "your-openai-key"
     # llm = init_chat_model("openai:gpt-4.1")
+    set_env_if_undefined("TAVILY_API_KEY", "your-api-key")
     run_all_demos()
